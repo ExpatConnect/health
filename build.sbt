@@ -21,4 +21,6 @@ libraryDependencies ++= {
 
 resolvers += "softprops-maven" at "http://dl.bintray.com/content/softprops/maven"
 
+assemblyJarName in assembly := "health.jar"
+
 Revolver.settings
