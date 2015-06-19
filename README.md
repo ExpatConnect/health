@@ -14,3 +14,9 @@ It will bind to the port `8080`
 ## Build
 
 `sbt assembly` will give you a fat jar: `target/scala-2.11/health-assembly-VERSION.jar`
+
+## Docker
+
+https://registry.hub.docker.com/u/miklosmartin/docker-health/
+
+`docker run -d -p 8080:8080 -e "ENDPOINTS=service1,service2/health,service3/check" miklosmartin/docker-health`
