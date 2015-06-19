@@ -17,9 +17,8 @@ class CheckerActor extends Actor with Checker {
 
 trait Checker extends HttpService {
 
-  val healthEndpoints = "ENDPOINTS"
-  val healthyStatuses = List(200, 204)
-  
+  val HEALTH_ENDPOINTS = "ENDPOINTS"
+
   val checkRoute = {
     path("health") {
       get {
@@ -38,25 +37,32 @@ trait Checker extends HttpService {
   }
 
   def endpoints : List[String] = {
-    sys.env.get(healthEndpoints) match {
+    rawEndpoints match {
       case Some(string) => string.split(",").foldRight(List[String]()) { (endpoint: String, endpoints: List[String]) =>
-        "http://" + endpoint :: endpoints
+        if (endpoint.startsWith("http://")) {
+          endpoint :: endpoints
+        } else {
+          "http://" + endpoint :: endpoints
+        }
       }
       case None => List()
     }
   }
 
+  def rawEndpoints: Option[String] = {
+    sys.env.get(HEALTH_ENDPOINTS)
+  }
+
   def checkIndividual (endpoint : String) : Future[Unit] = {
-    val pipeline: HttpRequest => Future[HttpResponse] = sendReceive
     pipeline(Get(endpoint)).map(endpointOK(endpoint, _))
   }
 
+  def pipeline: HttpRequest => Future[HttpResponse] = sendReceive
+
   def endpointOK (endpoint: String, response: HttpResponse) : Unit = {
-    val status = response.status.intValue
+    println(s"[healthcheck] Endpoint '$endpoint' returned ${response.status}")
 
-    println(s"[healthcheck] Endpoint '$endpoint' returned $status")
-
-    if (!healthyStatuses.contains(status)) {
+    if (response.status.isFailure) {
       throw new Exception(s"Endpoint '$endpoint' is unhealthy")
     }
   }
