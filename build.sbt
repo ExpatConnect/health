@@ -1,6 +1,6 @@
 name := """health"""
 
-version := "1.0-SNAPSHOT"
+version := "0.4"
 
 scalaVersion := "2.11.6"
 
@@ -25,7 +25,5 @@ resolvers += "softprops-maven" at "http://dl.bintray.com/content/softprops/maven
 resolvers += "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases"
 
 scalacOptions in Test ++= Seq("-Yrangepos")
-
-assemblyJarName in assembly := "health.jar"
 
 Revolver.settings
