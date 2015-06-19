@@ -5,3 +5,12 @@ If you host multiple services on the same machine, then it might be useful to de
 Currently this little service exposes a single endpoint: `/health` and checks each backend endpoints configureed as `ENDPOINTS` env var - as a comma separated list.
 
 Simply makes an HTTP request to them and if any of them fails, `500 Internal Server Error` will be returned. Returns `200 OK` otherwise.
+
+## Install
+
+Just grab the latest jar from the [releases](https://github.com/ExpatConnect/health/releases) and do `java -jar health.jar`
+It will bind to the port `8080`
+
+## Build
+
+`sbt assembly` will give you a fat jar: `target/scala-2.11/health.jar`
