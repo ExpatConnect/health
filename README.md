@@ -13,4 +13,4 @@ It will bind to the port `8080`
 
 ## Build
 
-`sbt assembly` will give you a fat jar: `target/scala-2.11/health.jar`
+`sbt assembly` will give you a fat jar: `target/scala-2.11/health-assembly-VERSION.jar`
