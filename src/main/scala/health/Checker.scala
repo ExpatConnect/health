@@ -17,8 +17,6 @@ class CheckerActor extends Actor with Checker {
 
 trait Checker extends HttpService {
 
-  val HEALTH_ENDPOINTS = "ENDPOINTS"
-
   val checkRoute = {
     path("health") {
       get {
@@ -50,7 +48,7 @@ trait Checker extends HttpService {
   }
 
   def rawEndpoints: Option[String] = {
-    sys.env.get(HEALTH_ENDPOINTS)
+    Environment.getEndpoints
   }
 
   def checkIndividual (endpoint : String) : Future[Unit] = {

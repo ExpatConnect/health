@@ -8,12 +8,12 @@ import akka.util.Timeout
 import scala.concurrent.duration._
 
 object Boot extends App {
-   implicit val system = ActorSystem("healt-check")
+  implicit val system = ActorSystem("healt-check")
 
-   val service = system.actorOf(Props[CheckerActor], "checker-service")
+  val service = system.actorOf(Props[CheckerActor], "checker-service")
 
-   implicit val timeout = Timeout(5.seconds)
-   IO(Http) ? Http.Bind(service, interface = "0.0.0.0", port = 8080)
+  implicit val timeout = Timeout(5.seconds)
+
+  IO(Http) ? Http.Bind(service, interface = "0.0.0.0", port = Environment.getPort)
 }
-
 
