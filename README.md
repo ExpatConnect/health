@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/ExpatConnect/health.svg)](https://travis-ci.org/ExpatConnect/health)
+
 # Health checker basic
 
 If you host multiple services on the same machine, then it might be useful to delegate healthchecks to all of the services.
