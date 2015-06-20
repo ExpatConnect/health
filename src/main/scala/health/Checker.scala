@@ -48,7 +48,7 @@ trait Checker extends HttpService {
   }
 
   def rawEndpoints: Option[String] = {
-    Environment.getEndpoints
+    Environment.endpoints
   }
 
   def checkIndividual (endpoint : String) : Future[Unit] = {

@@ -4,7 +4,8 @@ If you host multiple services on the same machine, then it might be useful to de
 
 Currently this little service exposes a single endpoint: `/health` and checks each backend endpoints configured in the `HEALTH_ENDPOINTS` env var, as a comma separated list.
 
-Simply makes an HTTP request to them and if any of them fails - or can't make all the requests in 1s - `500 Internal Server Error` will be returned. Returns `200 OK` otherwise.
+Simply makes an HTTP request to them and returns `500 Internal Server Error` if any of them fails or `200 OK` otherwise.
+Also returns `500 Internal Server Error` if it can't finish all the checks in a given timeout. This timeout can be con figured via the `HEALTH_TIMEOUT` environment variable in seconds, defaults to 1.
 
 ## Install
 
@@ -20,3 +21,11 @@ It will bind to the port `8080`, which can be overridden with setting the `HEALT
 https://registry.hub.docker.com/u/miklosmartin/docker-health/
 
 `docker run -d -p 8080:8080 -e "ENDPOINTS=service1,service2/health,service3/check" miklosmartin/docker-health`
+
+## Environment variables - again
+
+| Name            | Default | Purpose                                                          |
+|-----------------|--------:|------------------------------------------------------------------|
+| HEALT_PORT      | 8080    | The service binds to this port                                   |
+| HEALT_ENDPOINTS | None    | These endpoints will be checked                                  |
+| HEALTH_TIMEOUT  | 1       | Sets the timeout in seconds, in which all the checks must finish |
