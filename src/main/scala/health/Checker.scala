@@ -1,5 +1,7 @@
 package health
 
+import java.util
+
 import akka.actor.Actor
 import spray.routing._
 import spray.http._
@@ -22,7 +24,10 @@ trait Checker extends HttpService {
       get {
         dynamic {
           onComplete(check) {
-            case Success(value) => complete("OK")
+            case Success(value) => {
+              value.foreach(println)
+              complete("OK")
+            }
             case Failure(ex) => failWith(ex)
           }
         }
@@ -30,38 +35,38 @@ trait Checker extends HttpService {
     }
   }
 
-  def check : Future[List[Unit]] = {
+  def check: Future[List[String]] = {
     Future.sequence(endpoints.map(checkIndividual))
   }
 
-  def endpoints : List[String] = {
-    rawEndpoints match {
-      case Some(string) => string.split(",").foldRight(List[String]()) { (endpoint: String, endpoints: List[String]) =>
-        if (endpoint.startsWith("http://")) {
-          endpoint :: endpoints
-        } else {
-          "http://" + endpoint :: endpoints
-        }
-      }
-      case None => List()
+  def httpIfy(endpoint: String): String =
+    if (endpoint.startsWith("http://")) {
+      endpoint
+    } else {
+      "http://" + endpoint
     }
-  }
+
+
+  def endpoints: List[String] = rawEndpoints
+    .map(_.split(","))
+    .fold(List.empty[String])(_.to)
+    .map(httpIfy)
 
   def rawEndpoints: Option[String] = {
     Environment.endpoints
   }
 
-  def checkIndividual (endpoint : String) : Future[Unit] = {
+  def checkIndividual(endpoint: String): Future[String] = {
     pipeline(Get(endpoint)).map(endpointOK(endpoint, _))
   }
 
   def pipeline: HttpRequest => Future[HttpResponse] = sendReceive
 
-  def endpointOK (endpoint: String, response: HttpResponse) : Unit = {
-    println(s"[healthcheck] Endpoint '$endpoint' returned ${response.status}")
-
+  def endpointOK(endpoint: String, response: HttpResponse): String = {
     if (response.status.isFailure) {
-      throw new Exception(s"Endpoint '$endpoint' is unhealthy")
+      throw new Exception(s"Endpoint '$endpoint' is unhealthy and returned ${response.status}")
+    } else {
+      s"[healthcheck] Endpoint '$endpoint' returned ${response.status}"
     }
   }
 }
