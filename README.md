@@ -26,8 +26,8 @@ https://registry.hub.docker.com/u/miklosmartin/docker-health/
 
 ## Environment variables - again
 
-| Name            | Default | Purpose                                                          |
-|-----------------|--------:|------------------------------------------------------------------|
-| HEALT_PORT      | 8080    | The service binds to this port                                   |
-| HEALT_ENDPOINTS | None    | These endpoints will be checked                                  |
-| HEALTH_TIMEOUT  | 1       | Sets the timeout in seconds, in which all the checks must finish |
+| Name             | Default | Purpose                                                          |
+|------------------|--------:|------------------------------------------------------------------|
+| HEALTH_PORT      | 8080    | The service binds to this port                                   |
+| HEALTH_ENDPOINTS | None    | These endpoints will be checked                                  |
+| HEALTH_TIMEOUT   | 1       | Sets the timeout in seconds, in which all the checks must finish |
